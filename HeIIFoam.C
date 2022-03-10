@@ -53,6 +53,7 @@ Authors
 #include "ClassPolynom/ClassPolynom.H"
 #include "HepakThermo/HepakThermo.H"
 #include "pimpleControl.H"
+#include "wallFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -125,6 +126,44 @@ int main(int argc, char *argv[])
             }
 
         }
+
+        surfaceScalarField heatFluxFromAlphaEff =
+			fvc::interpolate(k)*(fvc::snGrad(T));
+
+        const surfaceScalarField::Boundary& patchHeatFlux2 =
+                 heatFluxFromAlphaEff.boundaryField();
+
+        Info<< "\nWall heat fluxes from alphaEff" << endl;
+        forAll(patchHeatFlux2, patchi)
+        {
+           if (typeid(mesh.boundary()[patchi]) == typeid(wallFvPatch))
+            {
+                Info<< mesh.boundary()[patchi].name()
+                    << ": Total "
+                    << gSum
+                       (
+                           mesh.magSf().boundaryField()[patchi]
+                          *patchHeatFlux2[patchi]
+                       )
+                    << " [W] over "
+                    << gSum
+                       (
+                           mesh.magSf().boundaryField()[patchi]
+                       )
+                    << " [m2] ("
+                    << gSum
+                       (
+                           mesh.magSf().boundaryField()[patchi]
+                          *patchHeatFlux2[patchi]
+                       )/
+                       gSum 
+                       (
+                           mesh.magSf().boundaryField()[patchi]
+                       )
+                    << " [W/m2])"
+                    << endl;
+            }
+      }
 
         runTime.write();
 

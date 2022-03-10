@@ -16,6 +16,7 @@
 	(
 		readBool(transportProperties.lookup("activeGorterMellink"))
 	);
+
 	scalar aGM = 1.0;
 	if(activeGorterMellink == false)
 	{
@@ -72,7 +73,7 @@
     );
 	dimensionedScalar Valpha ("Valpha", fvc::domainIntegrate(alpha));
 
-    Info<< "Reading field gamma\n" << endl;
+    Info<< "Creating field gamma\n" << endl;
     volScalarField gamma
     (
         IOobject
@@ -87,7 +88,7 @@
 		dimensionedScalar("gamma",dimensionSet(1,-3,-1,0,0,0,0),0.0)
     );
 
-    Info<< "Reading field continuity\n" << endl;
+    Info<< "Creating field continuity\n" << endl;
     volScalarField continuity
     (
         IOobject
@@ -154,7 +155,7 @@
 
 	volScalarField& s = thermo.s();
 
-	volScalarField& kf = thermo.kf();
+	volScalarField& k = thermo.k();
 
 	volScalarField& A = thermo.A();
 

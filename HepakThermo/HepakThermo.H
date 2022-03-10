@@ -125,7 +125,7 @@ class HepakThermo
             return s_;
         }
 
-        volScalarField& kf()
+        volScalarField& k()
         {
             return k_;
         }
